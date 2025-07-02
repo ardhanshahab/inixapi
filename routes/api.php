@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ContactWeb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -41,3 +42,5 @@ Route::get('jadwalRKM', [App\Http\Controllers\Api\apiController::class, 'jadwalR
 Route::get('materiinix', [App\Http\Controllers\Api\apiController::class, 'getMateriInix'])->name('materiinix');
 Route::get('materiinix/{id}', [App\Http\Controllers\Api\apiController::class, 'getMateriInixByID'])->name('materiinixID');
 // Route::get('getPerusahaanById', [App\Http\Controllers\Api\PerusahaanController::class, 'getPerusahaanById'])->name('getPerusahaanById');
+
+Route::post('/contact/web', [ContactWeb::class, 'store'])->name('ContactWeb');
