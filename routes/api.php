@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ContactWeb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,4 +44,4 @@ Route::get('materiinix/{id}', [App\Http\Controllers\Api\apiController::class, 'g
 // Route::get('getPerusahaanById', [App\Http\Controllers\Api\PerusahaanController::class, 'getPerusahaanById'])->name('getPerusahaanById');
 
 Route::post('/payment', [App\Http\Controllers\Api\PaymentSuccesController::class, 'receivePayment'])->name('receivePayment');
-
+Route::post('/contact/web', [ContactWeb::class, 'store'])->name('ContactWeb');
