@@ -43,4 +43,5 @@ Route::get('materiinix', [App\Http\Controllers\Api\apiController::class, 'getMat
 Route::get('materiinix/{id}', [App\Http\Controllers\Api\apiController::class, 'getMateriInixByID'])->name('materiinixID');
 // Route::get('getPerusahaanById', [App\Http\Controllers\Api\PerusahaanController::class, 'getPerusahaanById'])->name('getPerusahaanById');
 
+Route::post('/payment', [App\Http\Controllers\Api\PaymentSuccesController::class, 'receivePayment'])->name('receivePayment');
 Route::post('/contact/web', [ContactWeb::class, 'store'])->name('ContactWeb');
