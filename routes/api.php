@@ -3,6 +3,8 @@
 use App\Http\Controllers\Api\ContactWeb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\TicketController;
+use App\Http\Controllers\MonitoringReceiverController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,3 +48,10 @@ Route::get('materiinix/{id}', [App\Http\Controllers\Api\apiController::class, 'g
 Route::post('/payment', [App\Http\Controllers\Api\PaymentSuccesController::class, 'receivePayment'])->name('receivePayment');
 Route::post('/requestPenawaran', [App\Http\Controllers\Api\PaymentSuccesController::class, 'requestPenawaran'])->name('requestPenawaran');
 Route::post('/contact/web', [ContactWeb::class, 'store'])->name('ContactWeb');
+//Route::get('/getUserByEmailMoodle', [App\Http\Controllers\Api\apiController::class, 'getUserByEmailMoodle'])->name('getUserByEmailMoodle');
+
+Route::post('/tickets', [TicketController::class, 'store']); // Create Ticket
+Route::put('/tickets/{id}', [TicketController::class, 'update']); // Update Ticket
+Route::post('/telegram/webhook', [TelegramController::class, 'handle']);
+
+Route::post('/monitoring/receive', [MonitoringReceiverController::class, 'receive']);

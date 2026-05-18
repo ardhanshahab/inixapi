@@ -15,6 +15,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class apiController extends Controller
 {
@@ -272,15 +273,16 @@ class apiController extends Controller
         ]);
 
     }
-    public function UpcomingRKM(Request $request)
+    public function UpcomingRKM()
     {
         $today = Carbon::now();
-        $startDate = $today->copy()->startOfMonth()->toDateString();
+        $startDate = $today->copy()->subMonths(4)->startOfMonth()->toDateString();
         $endDate = $today->copy()->addMonths(4)->endOfMonth()->toDateString();
 
        // Ambil data RKM beserta relasi materi
         $rows = RKM::with('materi')
             ->whereBetween('tanggal_awal', [$startDate, $endDate])
+			->where('status', '0')
             ->get();
 
         // Kelompokkan berdasarkan nama materi dan tanggal_awal
@@ -308,15 +310,16 @@ class apiController extends Controller
         ]);
 
     }
-    public function jadwalRKM(Request $request)
+    public function jadwalRKM()
     {
         $today = Carbon::now();
-        $startDate = $today->copy()->startOfMonth()->toDateString();
-        $endDate = $today->copy()->addMonths(4)->endOfMonth()->toDateString();
+        $startDate = $today->copy()->subMonths(4)->startOfMonth()->toDateString();
+        $endDate = $today->copy()->endOfMonth()->toDateString();
 
-        // Ambil data RKM beserta relasi materi
+       // Ambil data RKM beserta relasi materi
         $rows = RKM::with('materi')
             ->whereBetween('tanggal_awal', [$startDate, $endDate])
+			->where('status', '0')
             ->get();
 
         // Kelompokkan berdasarkan nama materi dan tanggal_awal
@@ -327,29 +330,40 @@ class apiController extends Controller
         // Format hasil akhir
         $result = $grouped->map(function ($items, $key) {
             [$nama_materi, $tanggal_awal] = explode('|', $key);
-            $tanggal_akhir = $items->first()->tanggal_akhir;
-
-            // Tambahkan bulan sebagai informasi tambahan untuk pengelompokan
-            $bulan = Carbon::parse($tanggal_awal)->format('Y-m');
+            $tanggal_akhir = $items->first()->tanggal_akhir; // Ambil tanggal_akhir dari item pertama
 
             return [
                 'nama_materi' => $nama_materi,
                 'tanggal_awal' => $tanggal_awal,
                 'tanggal_akhir' => $tanggal_akhir,
-                'bulan' => $bulan,
-                'jadwals' => $items,
+                'jadwals' => $items, // Seluruh entri RKM dalam grup ini
             ];
-        });
-
-        // Kelompokkan berdasarkan bulan
-        $groupedByMonth = $result->groupBy('bulan')->sortKeys();
-    
+        })->values();
 
         return response()->json([
             'success' => true,
             'message' => 'Upcoming RKM',
-            'data' => $groupedByMonth,
+            'data' => $result,
         ]);
+    }
+
+    public function getUserByEmailMoodle()
+    {
+        $email='bugynugraha@gmail.com';
+        $baseUrl= 'https://jida.inixindobdg.co.id/webservice/rest/server.php'; 
+        $params = [
+            'wstoken' => 'cd3b9757388f26db94bf67ea94fd9bf8',
+            'wsfunction' => 'core_user_get_users_by_field',
+            'moodlewsrestformat' => 'json',
+            'field' => 'email',
+            'values[0]' => $email,
+        ];
+        $resp = Http::asForm()->post($baseUrl, $params);
+        $json = $resp->json();
+        if ($resp->failed() || isset($json['exception'])) {
+            return ['error' => $json['message'] ?? 'HTTP '.$resp->status()];
+        }
+        return $json[0] ?? null;
     }
 
 }
