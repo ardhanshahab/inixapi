@@ -53,7 +53,7 @@ class User extends Authenticatable
     }
 
     public function isAdmin()
-{
-    return $this->jabatan === 'HRD';
-}
+    {
+        return $this->jabatan === 'HRD';
+    }
 }
