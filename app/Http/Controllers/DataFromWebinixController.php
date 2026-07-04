@@ -10,7 +10,7 @@ class DataFromWebinixController extends Controller
 {
     public function fetchArticles()
     {
-        $apiUrl = 'http://127.0.0.1:8001/api/articles';
+        $apiUrl = 'https://inixindobdg.co.id/api/articles';
         $response = Http::get($apiUrl);
 
         $articles = collect();
