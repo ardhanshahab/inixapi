@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TicketController;
 use App\Http\Controllers\MonitoringReceiverController;
+use App\Http\Controllers\DataFromWebinixController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -55,3 +57,4 @@ Route::put('/tickets/{id}', [TicketController::class, 'update']); // Update Tick
 Route::post('/telegram/webhook', [TelegramController::class, 'handle']);
 
 Route::post('/monitoring/receive', [MonitoringReceiverController::class, 'receive']);
+Route::get('/filtered-articles', [DataFromWebinixController::class, 'fetchArticles']);
